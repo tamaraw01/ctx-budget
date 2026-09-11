@@ -1,29 +1,19 @@
-// Token counting module using GPT-2 BPE tokenizer
+// Token counting module using GPT-2 BPE tokenizer approximation
 // Provides exact token counts for LLM context windows
 
-use encoding_rs::UTF_8;
-
 /// Count tokens in text using GPT-2 tokenizer approximation
-/// encoding_rs gives us direct access to encoding metadata
+/// Blends word-count and character-count heuristics for accuracy
 pub fn count_tokens(text: &str) -> usize {
-    // GPT-2 tokenizer: ~1.3 tokens per word, ~0.25 tokens per character
-    // More accurate than naive ~4 chars per token
-    // For exact counts, would need OpenAI's tiktoken, but this is 95%+ accurate
-    
     if text.is_empty() {
         return 0;
     }
-    
-    // Simple heuristic: count whitespace splits + ~4 chars/token
-    // This is faster than full BPE encoding while remaining accurate for code
+
     let word_count = text.split_whitespace().count();
     let char_count = text.len();
-    
-    // Blend estimates: words are typically 4-5 chars, plus overhead
+
     let from_words = (word_count as f32 * 1.3) as usize;
     let from_chars = (char_count as f32 / 4.0) as usize;
-    
-    // Take average of both estimates for robustness
+
     (from_words + from_chars) / 2
 }
 
