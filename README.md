@@ -114,9 +114,8 @@ Feedback and PRs welcome. See [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## License
 
-MIT © 2026 Augie (via Francois Agent). Free to use, modify, sell.
+MIT License. Free to use, modify, and sell.
 
 ---
 
-**Built by** Augie with Francois Agent (Nous Research).  
 **Why it matters:** Token budgets are the new scarcity in AI engineering.
