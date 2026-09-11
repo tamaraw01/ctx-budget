@@ -11,7 +11,7 @@ use tokenizer::count_tokens;
 #[derive(Parser)]
 #[command(name = "ctx-budget")]
 #[command(about = "Analyze token budget per file in a repository")]
-#[command(author = "Augie via Francois")]
+#[command(author = "ctx-budget")]
 struct Args {
     #[arg(default_value = ".")]
     path: String,
