@@ -27,14 +27,14 @@ Exceeding limits = truncation, broken reasoning, expensive retries. You need to 
 ### Install (no build needed)
 
 ```bash
-cargo install --git https://github.com/aditama-next/ctx-budget.git
+cargo install --git https://github.com/tamaraw01/ctx-budget.git
 ctx-budget ./my-repo --model gpt-4o
 ```
 
 ### Or, build from source
 
 ```bash
-git clone https://github.com/aditama-next/ctx-budget.git
+git clone https://github.com/tamaraw01/ctx-budget.git
 cd ctx-budget
 cargo build --release
 ./target/release/ctx-budget ./ --model claude-3-5-sonnet-20240620 --limit 20

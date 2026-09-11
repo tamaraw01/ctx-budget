@@ -5,7 +5,7 @@ Thanks for your interest! Here's how to contribute:
 ## Setup
 
 1. Install Rust: https://rustup.rs
-2. Clone repo: `git clone https://github.com/aditama-next/ctx-budget.git`
+2. Clone repo: `git clone https://github.com/tamaraw01/ctx-budget.git`
 3. Build: `cargo build --release`
 4. Test: `cargo test` (when available)
 
