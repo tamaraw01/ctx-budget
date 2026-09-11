@@ -114,7 +114,12 @@ Feedback and PRs welcome. See [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## License
 
-MIT License. Free to use, modify, and sell.
+GNU General Public License v3.0
+
+**Free to use and modify. Share improvements back.**
+
+Forking for research and non-commercial purposes is encouraged.
+
 
 ---
 
