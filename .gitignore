@@ -8,3 +8,6 @@ Cargo.lock
 .env
 .idea/
 *.iml
+PHASE2_ROADMAP.md
+*_ROADMAP.md
+ROADMAP.md
