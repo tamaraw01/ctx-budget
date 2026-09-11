@@ -1,9 +1,9 @@
-use std::fs;
-use std::path::Path;
-use std::collections::HashSet;
-use walkdir::WalkDir;
 use clap::Parser;
 use serde::{Deserialize, Serialize};
+use std::collections::HashSet;
+use std::fs;
+use std::path::Path;
+use walkdir::WalkDir;
 
 mod tokenizer;
 use tokenizer::count_tokens;
@@ -22,7 +22,11 @@ struct Args {
     #[arg(long, default_value = "20")]
     limit: usize,
 
-    #[arg(long, value_delimiter = ',', default_value = "node_modules,.git,target,__pycache__,.venv,vendor,.pytest_cache")]
+    #[arg(
+        long,
+        value_delimiter = ',',
+        default_value = "node_modules,.git,target,__pycache__,.venv,vendor,.pytest_cache"
+    )]
     exclude_dirs: Vec<String>,
 
     #[arg(long, default_value = "auto")]
@@ -110,7 +114,23 @@ fn main() -> anyhow::Result<()> {
 
         if let Some(ext) = file_path.extension() {
             let ext_str = ext.to_string_lossy();
-            if matches!(ext_str.as_ref(), "rs" | "py" | "js" | "ts" | "md" | "toml" | "yaml" | "json" | "go" | "java" | "cpp" | "c" | "h" | "sh" | "bash") {
+            if matches!(
+                ext_str.as_ref(),
+                "rs" | "py"
+                    | "js"
+                    | "ts"
+                    | "md"
+                    | "toml"
+                    | "yaml"
+                    | "json"
+                    | "go"
+                    | "java"
+                    | "cpp"
+                    | "c"
+                    | "h"
+                    | "sh"
+                    | "bash"
+            ) {
                 if let Ok(content) = fs::read_to_string(file_path) {
                     let chars = content.len();
                     let tokens = count_tokens(&content);
@@ -134,14 +154,17 @@ fn main() -> anyhow::Result<()> {
         }
     }
 
-    per_file.sort_by(|a, b| b.tokens.cmp(&a.tokens));
+    per_file.sort_by_key(|a| std::cmp::Reverse(a.tokens));
 
     let report = Report {
         model: args.model.clone(),
-        scanned_at: format!("{}", std::time::SystemTime::now()
-            .duration_since(std::time::UNIX_EPOCH)
-            .unwrap()
-            .as_secs()),
+        scanned_at: format!(
+            "{}",
+            std::time::SystemTime::now()
+                .duration_since(std::time::UNIX_EPOCH)
+                .unwrap()
+                .as_secs()
+        ),
         summary: SummaryStat {
             files_scanned: total_files,
             total_chars,
@@ -181,7 +204,10 @@ fn print_text(report: &Report, limit: usize) {
     println!("  Total chars: {}", report.summary.total_chars);
     println!("  Total tokens: {}", report.summary.total_tokens);
     println!();
-    println!("Top {} files by token count:", limit.min(report.files.len()));
+    println!(
+        "Top {} files by token count:",
+        limit.min(report.files.len())
+    );
     for (i, file) in report.files.iter().take(limit).enumerate() {
         println!("  {:2}. {:>6} tokens | {}", i + 1, file.tokens, file.path);
     }
@@ -189,9 +215,13 @@ fn print_text(report: &Report, limit: usize) {
 
 fn print_csv(report: &Report) -> anyhow::Result<()> {
     let mut wtr = csv::Writer::from_writer(std::io::stdout());
-    wtr.write_record(&["path", "tokens", "chars"])?;
+    wtr.write_record(["path", "tokens", "chars"])?;
     for file in &report.files {
-        wtr.write_record(&[&file.path, &file.tokens.to_string(), &file.chars.to_string()])?;
+        wtr.write_record([
+            &file.path,
+            &file.tokens.to_string(),
+            &file.chars.to_string(),
+        ])?;
     }
     wtr.flush()?;
     Ok(())
@@ -204,7 +234,10 @@ mod tests {
     #[test]
     fn should_exclude_node_modules() {
         let exclude = ["node_modules"].iter().map(|s| s.to_string()).collect();
-        assert!(should_exclude(Path::new("node_modules/pkg/file.js"), &exclude));
+        assert!(should_exclude(
+            Path::new("node_modules/pkg/file.js"),
+            &exclude
+        ));
     }
 
     #[test]
@@ -215,9 +248,21 @@ mod tests {
 
     #[test]
     fn output_format_parsing() {
-        assert!(matches!("auto".parse::<OutputFormat>(), Ok(OutputFormat::Auto)));
-        assert!(matches!("json".parse::<OutputFormat>(), Ok(OutputFormat::Json)));
-        assert!(matches!("csv".parse::<OutputFormat>(), Ok(OutputFormat::Csv)));
-        assert!(matches!("text".parse::<OutputFormat>(), Ok(OutputFormat::Text)));
+        assert!(matches!(
+            "auto".parse::<OutputFormat>(),
+            Ok(OutputFormat::Auto)
+        ));
+        assert!(matches!(
+            "json".parse::<OutputFormat>(),
+            Ok(OutputFormat::Json)
+        ));
+        assert!(matches!(
+            "csv".parse::<OutputFormat>(),
+            Ok(OutputFormat::Csv)
+        ));
+        assert!(matches!(
+            "text".parse::<OutputFormat>(),
+            Ok(OutputFormat::Text)
+        ));
     }
 }

@@ -16,8 +16,13 @@ serde_json = "1"
 csv = "1"
 atty = "0.2"
 
+[dev-dependencies]
+tempfile = "3"
+rand = "0.8"
+
 [profile.release]
 opt-level = 3
 lto = true
 strip = true
+panic = "abort"
 
