@@ -7,15 +7,12 @@ use clap::Parser;
 #[command(name = "ctx-budget")]
 #[command(about = "Analyze token budget per file in a repository")]
 struct Args {
-    /// Path to repository
     #[arg(default_value = ".")]
     path: String,
 
-    /// LLM model (for context window reference)
     #[arg(long, default_value = "gpt-4o")]
     model: String,
 
-    /// Limit output to top N files
     #[arg(long, default_value = "20")]
     limit: usize,
 }
@@ -44,13 +41,12 @@ fn main() -> anyhow::Result<()> {
     {
         let path = entry.path();
         
-        // Extensions to scan
         if let Some(ext) = path.extension() {
             let ext_str = ext.to_string_lossy();
             if matches!(ext_str.as_ref(), "rs" | "py" | "js" | "ts" | "md" | "toml" | "yaml" | "json") {
                 if let Ok(content) = fs::read_to_string(path) {
                     let chars = content.len();
-                    let tokens_approx = (chars as f32 / 4.0) as usize; // ~4 chars per token
+                    let tokens_approx = (chars as f32 / 4.0) as usize;
                     
                     total_files += 1;
                     total_chars += chars;

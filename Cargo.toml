@@ -2,6 +2,10 @@
 name = "ctx-budget"
 version = "0.1.0"
 edition = "2021"
+description = "Token budget analyzer for LLM contexts"
+repository = "https://github.com/aditama-next/ctx-budget"
+license = "MIT"
+authors = ["Augie <augie@domain.local>"]
 
 [[bin]]
 name = "ctx-budget"
@@ -11,7 +15,6 @@ path = "src/main.rs"
 walkdir = "2"
 anyhow = "1"
 clap = { version = "4", features = ["derive"] }
-colored = "2"
 
 [profile.release]
 opt-level = 3

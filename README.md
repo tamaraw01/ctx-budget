@@ -1,8 +1,6 @@
-# ctx-budget 🔍
+# ctx-budget
 
-**Token budget analyzer for LLM contexts** — rapidly scan a repository and understand which files consume the most tokens when fed to Claude, GPT, Gemini, or any LLM model.
-
-![build](https://img.shields.io/badge/build-passing-brightgreen) ![license](https://img.shields.io/badge/license-MIT-blue) ![stars](https://img.shields.io/badge/stars-⭐-yellow)
+**Token budget analyzer for LLM contexts**: rapidly scan a repository and understand which files consume the most tokens when fed to Claude, GPT, Gemini, or any LLM model.
 
 ## The Problem
 
@@ -17,12 +15,12 @@ Exceeding limits = truncation, broken reasoning, expensive retries. You need to 
 
 ## Features
 
-✅ **Scan any repo** — walk directory tree, detect source files (`.rs`, `.py`, `.js`, `.ts`, `.md`, `.toml`, `.yaml`, `.json`)  
-✅ **Token estimation** — fast (~4 chars = 1 token, accurate for code)  
-✅ **Per-file breakdown** — see the top 20 token consumers  
-✅ **Model-aware** — reference context windows for Claude, GPT, Gemini, Qwen, Llama  
-✅ **Zero dependencies in release binary** — static Rust binary, no runtime  
-✅ **Instant feedback** — scans typical monorepo in <100ms  
+✅ **Scan any repo**: walk directory tree, detect source files (`.rs`, `.py`, `.js`, `.ts`, `.md`, `.toml`, `.yaml`, `.json`)  
+✅ **Token estimation**: fast (~4 chars = 1 token, accurate for code)  
+✅ **Per-file breakdown**: see the top 20 token consumers  
+✅ **Model-aware**: reference context windows for Claude, GPT, Gemini, Qwen, Llama  
+✅ **Zero dependencies in release binary**: static Rust binary, no runtime  
+✅ **Instant feedback**: scans typical monorepo in <100ms  
 
 ## Quick Start
 
