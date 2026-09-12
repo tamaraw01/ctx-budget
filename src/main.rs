@@ -7,7 +7,10 @@ use std::fs;
 use std::path::Path;
 use walkdir::WalkDir;
 
+mod model_registry;
 mod tokenizer;
+
+use model_registry::ModelRegistry;
 use tokenizer::count_tokens;
 
 /// Detect programming language from file extension
@@ -141,15 +144,15 @@ const SUPPORTED_EXTENSIONS: &[&str] = &[
     about = "Analyze token distribution across your codebase",
     long_about = "ctx-budget scans your project and counts tokens per file, helping you plan\nwhich files to include in LLM context windows.\n\nSupports 30+ languages, handles mixed encodings, excludes common build/dependency\ndirectories automatically, and outputs in text, JSON, or CSV formats.",
     author = "ctx-budget maintainers",
-    after_help = "Examples:\n  ctx-budget .                        # Scan current directory\n  ctx-budget . --model claude-sonnet-4  # Use Claude's 200K window\n  ctx-budget . --output json | jq .     # JSON for automation\n  ctx-budget . --limit 10               # Top 10 biggest files"
+    after_help = "Examples:\n  ctx-budget .                        # Scan current directory\n  ctx-budget . --model gpt-6-astra    # Use GPT-6 Astra's 1.05M window\n  ctx-budget . --output json | jq .   # JSON for automation\n  ctx-budget . --limit 10             # Top 10 biggest files"
 )]
 struct Args {
     /// Path to scan (default: current directory)
     #[arg(default_value = ".")]
     path: String,
 
-    /// LLM model name (sets context window limit)
-    #[arg(long, default_value = "gpt-4o")]
+    /// LLM model name (loads context window from models.toml)
+    #[arg(long, default_value = "gpt-6-astra")]
     model: String,
 
     /// Max number of files to show in output
@@ -175,6 +178,10 @@ struct Args {
     /// Include hidden files (those starting with '.')
     #[arg(long)]
     hidden: bool,
+
+    /// Path to models.toml (auto-detect in current dir or crate root if not provided)
+    #[arg(long)]
+    models_path: Option<String>,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
@@ -223,6 +230,7 @@ struct FileReport {
 #[derive(Serialize, Deserialize, Debug)]
 struct Report {
     model: String,
+    model_context_window: usize,
     scanned_at: String,
     summary: SummaryStat,
     files: Vec<FileReport>,
@@ -247,6 +255,25 @@ fn should_exclude(path: &Path, exclude_dirs: &HashSet<String>) -> bool {
     })
 }
 
+/// Try to locate models.toml (in current dir, then project root)
+fn locate_models_toml() -> Option<std::path::PathBuf> {
+    // Try current directory
+    let current = Path::new("models.toml");
+    if current.exists() {
+        return Some(current.to_path_buf());
+    }
+
+    // Try project root (parent of Cargo.toml)
+    if let Ok(manifest_dir) = std::env::var("CARGO_MANIFEST_DIR") {
+        let root = Path::new(&manifest_dir).join("models.toml");
+        if root.exists() {
+            return Some(root);
+        }
+    }
+
+    None
+}
+
 fn main() -> anyhow::Result<()> {
     let args = Args::parse();
     let path = Path::new(&args.path);
@@ -255,6 +282,44 @@ fn main() -> anyhow::Result<()> {
         eprintln!("Error: path '{}' does not exist", args.path);
         std::process::exit(1);
     }
+
+    // Load model registry: external file wins, otherwise use embedded database
+    let registry = if let Some(p) = args.models_path.as_deref() {
+        let ext_path = Path::new(p);
+        ModelRegistry::from_toml(ext_path).unwrap_or_else(|e| {
+            eprintln!(
+                "Warning: Failed to load models from '{}': {}. Falling back to embedded database.",
+                p, e
+            );
+            ModelRegistry::load_embedded().expect("embedded models.toml is invalid")
+        })
+    } else if let Some(found) = locate_models_toml() {
+        ModelRegistry::from_toml(&found).unwrap_or_else(|e| {
+            eprintln!(
+                "Warning: Failed to load '{}': {}. Falling back to embedded database.",
+                found.display(),
+                e
+            );
+            ModelRegistry::load_embedded().expect("embedded models.toml is invalid")
+        })
+    } else {
+        ModelRegistry::load_embedded().expect("embedded models.toml is invalid")
+    };
+
+    // Resolve model
+    let model_spec = registry.get(&args.model).cloned().ok_or_else(|| {
+        anyhow::anyhow!(
+            "Unknown model '{}'. Available models: {}",
+            args.model,
+            registry
+                .list_models()
+                .iter()
+                .map(|(id, _)| id.as_str())
+                .take(5)
+                .collect::<Vec<_>>()
+                .join(", ")
+        )
+    })?;
 
     let exclude_set: HashSet<String> = args.exclude_dirs.iter().cloned().collect();
     let mut total_files = 0;
@@ -297,58 +362,69 @@ fn main() -> anyhow::Result<()> {
 
         let filename = file_path.file_name().and_then(|n| n.to_str()).unwrap_or("");
 
-        let language = if SUPPORTED_EXTENSIONS.contains(&ext.as_str()) {
-            detect_language(&ext)
+        let supported = if ext.is_empty() {
+            !detect_language_from_filename(filename).eq("Other")
         } else {
-            detect_language_from_filename(filename)
+            SUPPORTED_EXTENSIONS.contains(&ext.as_str())
         };
 
-        // Skip unsupported files (empty "Other" without known extension)
-        if ext.is_empty() && language == "Other" {
+        if !supported {
             continue;
         }
 
-        if let Ok(content) = fs::read_to_string(file_path) {
-            let chars = content.len();
-            let tokens = count_tokens(&content);
+        let language = if ext.is_empty() {
+            detect_language_from_filename(filename).to_string()
+        } else {
+            detect_language(&ext).to_string()
+        };
 
-            total_files += 1;
-            total_chars += chars;
-            total_tokens += tokens;
+        match fs::read_to_string(file_path) {
+            Ok(content) => {
+                let tokens = count_tokens(&content);
+                let chars = content.len();
 
-            *lang_counts.entry(language.to_string()).or_insert(0) += 1;
+                total_files += 1;
+                total_chars += chars;
+                total_tokens += tokens;
 
-            let rel_path = file_path
-                .strip_prefix(path)
-                .map(|p| p.to_string_lossy().to_string())
-                .unwrap_or_else(|_| file_path.to_string_lossy().to_string());
+                lang_counts
+                    .entry(language.clone())
+                    .and_modify(|c| *c += 1)
+                    .or_insert(1);
 
-            per_file.push(FileReport {
-                path: rel_path,
-                tokens,
-                chars,
-                language: language.to_string(),
-            });
+                per_file.push(FileReport {
+                    path: file_path
+                        .strip_prefix(path)
+                        .unwrap_or(file_path)
+                        .to_string_lossy()
+                        .into_owned(),
+                    tokens,
+                    chars,
+                    language,
+                });
+            },
+            Err(_) => {
+                // Skip binary or unreadable files
+                continue;
+            },
         }
     }
 
-    per_file.sort_by_key(|a| std::cmp::Reverse(a.tokens));
-
+    // Sort by tokens (descending)
+    per_file.sort_by(|a, b| b.tokens.cmp(&a.tokens));
     let display_files = if args.all {
-        per_file.clone()
+        per_file
     } else {
-        per_file.iter().take(args.limit).cloned().collect()
+        per_file.into_iter().take(args.limit).collect()
     };
 
     let report = Report {
-        model: args.model.clone(),
-        scanned_at: format!(
-            "{}",
-            std::time::SystemTime::now()
-                .duration_since(std::time::UNIX_EPOCH)
-                .unwrap()
-                .as_secs()
+        model: format!(
+            "{} ({} tokens context)",
+            model_spec.name, model_spec.context_window
         ),
+        model_context_window: model_spec.context_window,
+        scanned_at: chrono::Local::now().format("%Y-%m-%d %H:%M:%S").to_string(),
         summary: SummaryStat {
             files_scanned: total_files,
             total_chars,
@@ -392,6 +468,11 @@ fn print_text(report: &Report, limit: usize) {
     println!(
         "  Total tokens:  {}",
         format_number(report.summary.total_tokens)
+    );
+    println!(
+        "  % of {} context: {:.2}%",
+        format_number(report.model_context_window),
+        (report.summary.total_tokens as f64 / report.model_context_window as f64) * 100.0
     );
     println!();
     println!("Languages found: {}", report.summary.languages.len());

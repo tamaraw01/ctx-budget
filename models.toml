@@ -1,0 +1,263 @@
+# ctx-budget Model Database
+# Auto-updated with latest LLM releases
+# Last verified: 2026-09-12
+# Sources: OpenAI API docs, Anthropic Platform, Google AI for Developers,
+#          Meta Llama, Mistral, DeepSeek, Zhipu AI, xAI, Alibaba, OpenRouter
+
+# === FRONTIER: 1M+ CONTEXT WINDOWS ===
+
+[models.gpt-6-astra]
+name = "GPT-6 Astra"
+provider = "OpenAI"
+context_window = 1050000
+max_output = 128000
+input_price_per_1m = 10.00
+output_price_per_1m = 50.00
+released = "2026-09-04"
+description = "Computer-use focused. Reasoning effort: low/medium/high/xhigh/max. State-of-the-art on code and cyber tasks. Critical cybersecurity threshold."
+
+[models.claude-fable-5-1]
+name = "Claude Fable 5.1"
+provider = "Anthropic"
+context_window = 1000000
+max_output = 128000
+input_price_per_1m = 10.00
+output_price_per_1m = 50.00
+released = "2026-09-01"
+description = "5th-gen agentic model. Adaptive thinking always-on. Long-horizon agentic workflows, document/spreadsheet/slides work."
+
+[models.gemini-3-5-flash]
+name = "Gemini 3.5 Flash"
+provider = "Google"
+context_window = 1000000
+max_output = 65536
+input_price_per_1m = 0.075
+output_price_per_1m = 0.30
+released = "2026-05-19"
+description = "1M context mid-tier. Aggressive pricing. Fast parallel processing."
+
+[models.gemini-3-1-pro]
+name = "Gemini 3.1 Pro"
+provider = "Google"
+context_window = 1048576
+max_output = 65536
+input_price_per_1m = 0.50
+output_price_per_1m = 1.50
+released = "2026-02-19"
+description = "1M context. Text + image + audio + video + PDF input. Three-tier thinking (low/medium/high)."
+
+[models.claude-opus-5]
+name = "Claude Opus 5"
+provider = "Anthropic"
+context_window = 1000000
+max_output = 128000
+input_price_per_1m = 5.00
+output_price_per_1m = 25.00
+released = "2026-06"
+description = "1M context. Premium reasoning. Most capable in Anthropic lineup. Adaptive thinking."
+
+[models.claude-opus-4-8]
+name = "Claude Opus 4.8"
+provider = "Anthropic"
+context_window = 1000000
+max_output = 128000
+input_price_per_1m = 5.00
+output_price_per_1m = 25.00
+released = "2026-06"
+description = "1M context. Top-tier coding and reasoning."
+
+[models.gpt-4-1]
+name = "GPT-4.1"
+provider = "OpenAI"
+context_window = 1047576
+max_output = 32768
+input_price_per_1m = 5.00
+output_price_per_1m = 15.00
+released = "2026-09"
+description = "Mid-tier frontier. Strong reasoning and coding. 1M context."
+
+[models.claude-sonnet-5]
+name = "Claude Sonnet 5"
+provider = "Anthropic"
+context_window = 1000000
+max_output = 128000
+input_price_per_1m = 2.00
+output_price_per_1m = 10.00
+released = "2026-06-30"
+description = "1M context. Near-Opus coding quality at lower cost. Default model for Free and Pro plans."
+
+[models.deepseek-v4-pro]
+name = "DeepSeek V4 Pro"
+provider = "DeepSeek"
+context_window = 1048576
+max_output = 128000
+input_price_per_1m = 0.43
+output_price_per_1m = 0.87
+released = "2026-04-24"
+description = "1.6T params, 49B active. MoE. Open source (MIT). State-of-the-art for open models."
+
+[models.deepseek-v4-flash]
+name = "DeepSeek V4 Flash"
+provider = "DeepSeek"
+context_window = 1048576
+max_output = 384000
+input_price_per_1m = 0.14
+output_price_per_1m = 0.28
+released = "2026-04-24"
+description = "284B params, 13B active. MoE. Highly efficient long-context. MIT licensed."
+
+[models.llama-4-scout]
+name = "Llama 4 Scout"
+provider = "Meta"
+context_window = 10000000
+max_output = 32768
+input_price_per_1m = 0.15
+output_price_per_1m = 0.60
+released = "2025-04"
+description = "Open-source flagship. 10M context (MoE 109B, 17B active). Multimodal. Llama Community License."
+
+[models.glm-5-3]
+name = "GLM-5.3"
+provider = "Zhipu AI"
+context_window = 1000000
+max_output = 128000
+input_price_per_1m = 1.40
+output_price_per_1m = 4.40
+released = "2026-08-18"
+description = "743B params MoE flagship. Text + image + video. AA Intelligence Index 60."
+
+[models.glm-5-3-flash]
+name = "GLM-5.3 Flash"
+provider = "Zhipu AI"
+context_window = 1000000
+max_output = 128000
+input_price_per_1m = 0.15
+output_price_per_1m = 0.47
+released = "2026-08-26"
+description = "320B params, 18B active. Multimodal text/image/video. MIT licensed weights."
+
+# === HIGH-PERFORMANCE: 200K-500K CONTEXT ===
+
+[models.gpt-5]
+name = "GPT-5"
+provider = "OpenAI"
+context_window = 400000
+max_output = 128000
+input_price_per_1m = 5.00
+output_price_per_1m = 15.00
+released = "2026-05"
+description = "400K context. High reasoning capability."
+
+[models.claude-haiku-4-5]
+name = "Claude Haiku 4.5"
+provider = "Anthropic"
+context_window = 200000
+max_output = 64000
+input_price_per_1m = 0.80
+output_price_per_1m = 4.00
+released = "2025-11"
+description = "Fast and affordable. 200K context at sub-second latency."
+
+[models.mistral-large-3]
+name = "Mistral Large 3"
+provider = "Mistral AI"
+context_window = 262000
+max_output = 16384
+input_price_per_1m = 0.50
+output_price_per_1m = 1.50
+released = "2026-03"
+description = "Strong multilingual. Competitive coding performance."
+
+[models.claude-sonnet-4-6]
+name = "Claude Sonnet 4.6"
+provider = "Anthropic"
+context_window = 200000
+max_output = 64000
+input_price_per_1m = 3.00
+output_price_per_1m = 15.00
+released = "2024-06"
+description = "LEGACY: Use Claude Sonnet 5 instead (better price-performance, same 1M context)."
+
+[models.grok-4-5]
+name = "Grok 4.5"
+provider = "xAI"
+context_window = 500000
+max_output = 64000
+input_price_per_1m = 2.00
+output_price_per_1m = 6.00
+released = "2026-07-08"
+description = "Coding-focused. Opus-class at lower cost. 500K context. Native Cursor integration."
+
+[models.qwen-max]
+name = "Qwen Max"
+provider = "Alibaba"
+context_window = 128000
+max_output = 4096
+input_price_per_1m = 0.40
+output_price_per_1m = 0.40
+released = "2025-12"
+description = "Alibaba flagship. Strong multilingual and reasoning."
+
+[models.llama-3-3-70b]
+name = "Llama 3.3 70B"
+provider = "Meta"
+context_window = 131072
+max_output = 4096
+input_price_per_1m = 0.12
+output_price_per_1m = 0.38
+released = "2025-12"
+description = "Open-source. Matches Llama 3.1 405B quality at 70B parameters."
+
+# === STANDARD: 128K CONTEXT ===
+
+[models.mistral-large-2]
+name = "Mistral Large 2"
+provider = "Mistral AI"
+context_window = 128000
+max_output = 8192
+input_price_per_1m = 2.00
+output_price_per_1m = 6.00
+released = "2025-11"
+description = "Strong multilingual performance. Competitive with GPT-4o on reasoning."
+
+[models.gemini-2-0-flash]
+name = "Gemini 2.0 Flash"
+provider = "Google"
+context_window = 1048576
+max_output = 8192
+input_price_per_1m = 0.10
+output_price_per_1m = 0.40
+released = "2025-12"
+description = "1M context. Multimodal native. Aggressive pricing."
+
+# === LEGACY (backward compatibility) ===
+
+[models.gpt-4o]
+name = "GPT-4o"
+provider = "OpenAI"
+context_window = 128000
+max_output = 16384
+input_price_per_1m = 5.00
+output_price_per_1m = 15.00
+released = "2024-05"
+description = "LEGACY: 128K context. Use GPT-4.1 (1M context) or GPT-6 Astra instead."
+
+[models.gpt-5-6]
+name = "GPT-5.6"
+provider = "OpenAI"
+context_window = 1050000
+max_output = 128000
+input_price_per_1m = 5.00
+output_price_per_1m = 30.00
+released = "2026-07-09"
+description = "LEGACY: Superseded by GPT-6 Astra. 1M context."
+
+[models.claude-sonnet-4]
+name = "Claude Sonnet 4"
+provider = "Anthropic"
+context_window = 200000
+max_output = 64000
+input_price_per_1m = 3.00
+output_price_per_1m = 15.00
+released = "2024-06"
+description = "LEGACY: Use Claude Sonnet 5 (1M context, same price) instead."
