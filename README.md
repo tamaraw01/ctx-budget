@@ -21,7 +21,7 @@ Most models have known limits. Choosing the right files for each model means few
 
 ## Features
 
-- **Token estimation**: Blended word/character heuristic (~95% correlation with GPT-2 BPE)
+- **Token estimation**: Blended word/character heuristic (approximate; correlate with target LLM's tokenizer)
 - **Directory filtering**: Excludes `node_modules`, `.git`, `target`, `__pycache__`, `.venv`, `vendor`, and custom paths
 - **Multiple output formats**: Text (terminal), JSON (automation), CSV (spreadsheets)
 - **30+ languages**: Auto-detects Rust, Python, Go, TypeScript, JavaScript, C/C++, Shell, SQL, and others
@@ -238,27 +238,15 @@ Top 10 files by token count:
 
 This approach avoids linking against heavy tokenizer libraries while providing estimates accurate enough for context window planning.
 
-## Performance
+## How Token Counting Works
 
-Tested on a repository with 1,000 source files (100MB):
+`ctx-budget` uses a blended heuristic:
 
-- Execution time: < 0.8 seconds
-- Peak RAM: < 15MB
+1. Word count: ~1.3 tokens per word
+2. Character count: ~0.25 tokens per character
+3. Average of both estimates
 
-## Testing
-
-Run unit and integration tests:
-
-```bash
-cargo test --release
-```
-
-Check code formatting and lints:
-
-```bash
-cargo fmt --check
-cargo clippy --release
-```
+This approach avoids linking against heavy tokenizer libraries. Accuracy depends on your LLM's tokenizer; test against your target model.
 
 ## License
 

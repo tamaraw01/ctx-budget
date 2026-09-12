@@ -14,7 +14,7 @@ max_output = 128000
 input_price_per_1m = 10.00
 output_price_per_1m = 50.00
 released = "2026-09-04"
-description = "Computer-use focused. Reasoning effort: low/medium/high/xhigh/max. State-of-the-art on code and cyber tasks. Critical cybersecurity threshold."
+description = "Reasoning-focused. Effort modes: low/medium/high/xhigh/max. Top capability on code tasks."
 
 [models.claude-fable-5-1]
 name = "Claude Fable 5.1"
@@ -94,7 +94,7 @@ max_output = 128000
 input_price_per_1m = 0.43
 output_price_per_1m = 0.87
 released = "2026-04-24"
-description = "1.6T params, 49B active. MoE. Open source (MIT). State-of-the-art for open models."
+description = "Open source (MIT). 1.6T params, 49B active. Mixture-of-Experts."
 
 [models.deepseek-v4-flash]
 name = "DeepSeek V4 Flash"

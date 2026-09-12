@@ -39,7 +39,7 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and ver
 
 ### Added
 
-- Exact token counting using blended word/character heuristic (approximately 95% accuracy)
+- Blended word/character heuristic for token estimation
 - Smart directory exclusion (node_modules, .git, target, __pycache__, .venv, vendor)
 - Multiple output formats: text, JSON, CSV
 - Support for 15+ languages: Rust, Python, JavaScript, TypeScript, Go, Java, C++, and more
