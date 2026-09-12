@@ -1,40 +1,30 @@
-# VHS documentation: https://github.com/charmbracelet/vhs
+# Demo for ctx-budget - tape for charmbracelet/vhs
+# https://github.com/charmbracelet/vhs
 
-Output assets/demo.gif
+Output "assets/demo.gif"
 
 Require ctx-budget
 
-Set Margin 20
-Set MarginFill "#674EFF"
-Set BorderRadius 10
-
-Set FontSize 16
+Set FontSize 15
 Set FontFamily "JetBrains Mono"
-Set Width 900
-Set Height 600
+Set Width 1200
+Set Height 700
 Set Theme "Catppuccin Mocha"
+Set Padding 10
+Set Margin 16
+Set BorderRadius 8
 Set WindowBar Colorful
 
-# Setup the environment quietly
 Hide
 Type "cd assets/demo-env" Enter
 Type "clear" Enter
 Show
 
-# Typing the command
-Sleep 1s
-Type "ctx-budget . --model claude-sonnet-4 --limit 5"
-Sleep 500ms
-Enter
+Sleep 800ms
+Type "ctx-budget . --model claude-sonnet-4 --limit 5" Enter
+Sleep 3500ms
 
-# Wait for scan to finish (it's instant)
-Sleep 3s
-
-# Show exclusion filtering
 Type "clear" Enter
-Sleep 500ms
-Type "ctx-budget . --exclude-dirs 'docs' --output json | jq ."
-Sleep 500ms
-Enter
-
-Sleep 4s
+Sleep 400ms
+Type "ctx-budget . --output json | jq . | head -n 25" Enter
+Sleep 3500ms

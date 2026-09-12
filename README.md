@@ -4,6 +4,8 @@ Token distribution analyzer for LLM context windows.
 
 Scans project files, estimates token counts, and reports usage per file before sending code to Claude, GPT-4, Gemini, or local models.
 
+![ctx-budget demo](assets/demo.gif)
+
 ## Problem
 
 Feeding an entire repository into an LLM context window often exceeds model limits or wastes tokens on unnecessary files:
