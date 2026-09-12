@@ -4,6 +4,11 @@ Token distribution analyzer for LLM context windows.
 
 Scans project files, estimates token counts, and reports usage per file before sending code to Claude, GPT-4, Gemini, or local models.
 
+[![Crates.io](https://img.shields.io/crates/v/ctx-budget?style=flat-square)](https://crates.io/crates/ctx-budget)
+[![License: GPLv3](https://img.shields.io/badge/license-GPLv3-blue?style=flat-square)](LICENSE)
+[![CI](https://img.shields.io/github/actions/workflow/status/tamaraw01/ctx-budget/ci.yml?style=flat-square&label=tests)](https://github.com/tamaraw01/ctx-budget/actions/workflows/ci.yml)
+[![Latest Release](https://img.shields.io/github/v/release/tamaraw01/ctx-budget?style=flat-square)](https://github.com/tamaraw01/ctx-budget/releases)
+
 ![ctx-budget demo](assets/demo.gif)
 
 ## Problem
