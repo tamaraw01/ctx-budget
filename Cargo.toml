@@ -1,6 +1,6 @@
 [package]
 name = "ctx-budget"
-version = "0.3.0"
+version = "0.3.1"
 edition = "2021"
 rust-version = "1.70"
 description = "Analyze token distribution across your codebase to plan LLM context usage before hitting limits"
