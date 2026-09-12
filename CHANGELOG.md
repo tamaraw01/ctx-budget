@@ -11,13 +11,11 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and ver
 ### Added
 
 - **Config-driven ModelRegistry**: Model definitions and context window sizes now load from a configuration file instead of hardcoded values
-- **Embedded models.toml**: 22 current models bundled with the release:
-  - GPT-6 Astra (1.05M context window)
-  - Claude Fable 5.1 (200K context window)
-  - DeepSeek V4 (128K context window)
-  - Gemini 3.1 Pro (2M context window)
-  - Llama 4 Scout (8K context window)
-  - Plus 17 additional models (GPT-4o, Claude 3 Haiku, Grok-2, Command R+, Mistral Large, and others)
+- **Embedded models.toml**: 25 current models bundled with the release:
+  - Frontier (1M+): GPT-6 Astra, Claude Opus 5, Claude Opus 4.8, Claude Sonnet 5, Claude Fable 5.1, Gemini 3.5 Flash, Gemini 3.1 Pro, GPT-4.1, DeepSeek V4 (Pro/Flash), Llama 4 Scout, GLM-5.3 (Base/Flash), Gemini 2.0 Flash (12 frontier + 1 standard 1M = 13 total)
+  - High-Performance (200K-500K): Grok-4.5, GPT-5, Mistral Large 3, Claude Haiku 4.5, Claude Sonnet 4.6 (5 models)
+  - Standard (128K): Llama 3.3 70B, Qwen Max, Mistral Large 2 (3 models)
+  - Legacy (backward compat): GPT-4o, GPT-5.6, Claude Sonnet 4 (3 models)
   - See [models.toml](./models.toml) for the complete list and specifications
 - **--model flag resolution**: The --model flag now resolves context windows from the loaded configuration instead of relying on hardcoded mappings
 - **--models-path override**: Users can provide a path to an external models.toml file to customize or extend the model registry at runtime

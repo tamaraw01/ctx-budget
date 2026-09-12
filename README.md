@@ -59,7 +59,7 @@ ctx-budget .
 
 ### Models & Context Windows
 
-ctx-budget ships with 22 models across 4 tiers. Each tier represents a different price-to-capability tradeoff.
+ctx-budget ships with 25 models across 4 tiers. Each tier represents a different price-to-capability tradeoff.
 
 #### Configuration System
 
@@ -80,6 +80,7 @@ For analyzing entire codebases, long documents, or multi-file contexts in a sing
 |----------|----------|--------|--------|------------|----------|
 | `gpt-6-astra` | OpenAI | 1.05M | 128K | $10/1M | Sep 2026 |
 | `claude-opus-5` | Anthropic | 1M | 128K | $5/1M | Jun 2026 |
+| `claude-opus-4-8` | Anthropic | 1M | 128K | $5/1M | Jun 2026 |
 | `claude-sonnet-5` | Anthropic | 1M | 128K | $2/1M | Jun 2026 |
 | `claude-fable-5-1` | Anthropic | 1M | 128K | $10/1M | Sep 2026 |
 | `gemini-3-5-flash` | Google | 1M | 64K | $0.075/1M | May 2026 |
@@ -90,6 +91,7 @@ For analyzing entire codebases, long documents, or multi-file contexts in a sing
 | `llama-4-scout` | Meta | 10M | 32K | $0.15/1M | Apr 2025 |
 | `glm-5-3` | Zhipu AI | 1M | 128K | $1.40/1M | Aug 2026 |
 | `glm-5-3-flash` | Zhipu AI | 1M | 128K | $0.15/1M | Aug 2026 |
+| `gemini-2-0-flash` | Google | 1M | 8K | $0.10/1M | Dec 2025 |
 
 **Example:** Analyze an entire Rails application with 150K tokens of code:
 
@@ -103,12 +105,10 @@ For large projects that fit in a single request without the full 1M overhead.
 
 | Model ID | Provider | Window | Output | Input Cost | Released |
 |----------|----------|--------|--------|------------|----------|
-| `gpt-5` | OpenAI | 400K | 128K | $5/1M | May 2026 |
-| `claude-haiku-4-5` | Anthropic | 200K | 64K | $0.80/1M | Nov 2025 |
 | `grok-4-5` | xAI | 500K | 64K | $2/1M | Jul 2026 |
+| `gpt-5` | OpenAI | 400K | 128K | $5/1M | May 2026 |
 | `mistral-large-3` | Mistral | 262K | 16K | $0.50/1M | Mar 2026 |
-| `qwen-max` | Alibaba | 128K | 4K | $0.40/1M | Dec 2025 |
-| `llama-3-3-70b` | Meta | 131K | 4K | $0.12/1M | Dec 2025 |
+| `claude-haiku-4-5` | Anthropic | 200K | 64K | $0.80/1M | Nov 2025 |
 | `claude-sonnet-4-6` | Anthropic | 200K | 64K | $3/1M | Jun 2024 |
 
 **Example:** Analyze a Python package with 250K tokens:
@@ -123,8 +123,9 @@ For focused analysis of individual modules or services.
 
 | Model ID | Provider | Window | Output | Input Cost | Released |
 |----------|----------|--------|--------|------------|----------|
+| `llama-3-3-70b` | Meta | 131K | 4K | $0.12/1M | Dec 2025 |
+| `qwen-max` | Alibaba | 128K | 4K | $0.40/1M | Dec 2025 |
 | `mistral-large-2` | Mistral | 128K | 8K | $2/1M | Nov 2025 |
-| `gemini-2-0-flash` | Google | 1.04M | 8K | $0.10/1M | Dec 2025 |
 
 **Example:** Analyze a single service with 100K tokens:
 
@@ -160,7 +161,7 @@ ctx-budget . --model claude-haiku-4-5
 # Output shows all tokens as % of 200K window
 ```
 
-Default model: `gpt-4o` (128K window). If a model is not found in `models.toml`, the tool exits with an error.
+Default model: `gpt-6-astra` (1.05M window). If a model is not found in `models.toml`, the tool exits with an error listing available models.
 
 ### External Model Override via --models-path
 
