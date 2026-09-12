@@ -33,4 +33,4 @@ We will acknowledge your report within 48 hours and provide an ETA for a fix.
 
 ## Security Audit Results
 
-Last scan: 2026-09-12 — No vulnerabilities detected.
+Last scan: 2026-09-12. No vulnerabilities detected.
