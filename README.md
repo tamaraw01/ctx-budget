@@ -207,12 +207,13 @@ ctx-budget . --exclude-dirs "dist,build,coverage"
 
 ```
 === ctx-budget Report ===
-Model: gpt-4o
+Model: GPT-6 Astra (1050000 tokens context)
 
 Summary:
   Files scanned: 42
   Total chars:   614,428
   Total tokens:  153,607
+  % of 1,050,000 context: 14.63%
 
 Languages found: 3
   Rust                 35 file(s)
