@@ -21,7 +21,7 @@ Type "clear" Enter
 Show
 
 Sleep 800ms
-Type "ctx-budget . --model claude-sonnet-4 --limit 5" Enter
+Type "ctx-budget . --model gpt-6-astra --limit 5" Enter
 Sleep 3500ms
 
 Type "clear" Enter
