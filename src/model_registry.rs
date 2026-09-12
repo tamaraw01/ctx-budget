@@ -20,7 +20,7 @@ pub struct ModelRegistry {
 }
 
 impl ModelRegistry {
-    /// Embedded models.toml — always bundled in the binary via include_str!.
+    /// Embedded models.toml: always bundled in the binary via include_str!.
     /// This guarantees `cargo install ctx-budget` works standalone, with no
     /// external file dependency at runtime.
     const EMBEDDED_MODELS_TOML: &'static str = include_str!("../models.toml");

@@ -13,7 +13,7 @@ Scans project files, estimates token counts, and reports usage per file before s
 
 ## Problem
 
-Feeding an entire repository into an LLM context window often exceeds model limits or wastes tokens on unnecessary files.
+Feeding a repository into an LLM context window risks exceeding model limits (most models: 128K-1M) or wasting tokens on unnecessary files.
 
 Most models have known limits. Choosing the right files for each model means fewer API calls and lower costs.
 
@@ -135,7 +135,7 @@ ctx-budget . --model mistral-large-2
 
 #### Legacy
 
-Older models retained for backward compatibility. Use the frontier or high-performance equivalents instead for better price and capability.
+Older models retained for backward compatibility. Use frontier or high-performance equivalents instead. Pricing and capability improved significantly.
 
 | Model ID | Provider | Window | Note |
 |----------|----------|--------|------|
