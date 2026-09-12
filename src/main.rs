@@ -411,7 +411,7 @@ fn main() -> anyhow::Result<()> {
     }
 
     // Sort by tokens (descending)
-    per_file.sort_by(|a, b| b.tokens.cmp(&a.tokens));
+    per_file.sort_by_key(|a| std::cmp::Reverse(a.tokens));
     let display_files = if args.all {
         per_file
     } else {

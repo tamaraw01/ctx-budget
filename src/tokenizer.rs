@@ -30,7 +30,7 @@ mod tests {
     fn single_word_one_token() {
         let result = count_tokens("hello");
         assert!(
-            result >= 1 && result <= 2,
+            (1..=2).contains(&result),
             "single word should be 1-2 tokens, got {}",
             result
         );
@@ -43,7 +43,7 @@ mod tests {
         // ~34 chars ≈ 8-9 tokens; 5 words ≈ 6-7 tokens
         // Average should be ~7-8 tokens
         assert!(
-            tokens >= 5 && tokens <= 12,
+            (5..=12).contains(&tokens),
             "code snippet should be 5-12 tokens, got {}",
             tokens
         );

@@ -64,11 +64,12 @@ impl ModelRegistry {
             .iter()
             .map(|(id, spec)| (id.clone(), spec))
             .collect();
-        list.sort_by(|a, b| b.1.context_window.cmp(&a.1.context_window));
+        list.sort_by_key(|a| std::cmp::Reverse(a.1.context_window));
         list
     }
 
     /// Get default model ID (gpt-6-astra, fall back to gpt-4o)
+    #[allow(dead_code)]
     pub fn default_model(&self) -> String {
         if self.models.contains_key("gpt-6-astra") {
             "gpt-6-astra".to_string()
@@ -84,6 +85,7 @@ impl ModelRegistry {
     }
 
     /// Create empty default registry (fallback when models.toml not found)
+    #[allow(dead_code)]
     pub fn new_default() -> Self {
         ModelRegistry {
             models: HashMap::new(),
@@ -101,8 +103,6 @@ impl std::fmt::Debug for ModelRegistry {
 
 #[cfg(test)]
 mod tests {
-    use super::*;
-
     #[test]
     fn test_model_registry_load() {
         // Will test once models.toml is in place
