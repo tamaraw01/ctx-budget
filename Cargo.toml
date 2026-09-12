@@ -2,6 +2,16 @@
 name = "ctx-budget"
 version = "0.2.0"
 edition = "2021"
+rust-version = "1.70"
+description = "Analyze token distribution across your codebase — plan LLM context usage before you hit the limit"
+license = "GPL-3.0"
+repository = "https://github.com/tamaraw01/ctx-budget"
+homepage = "https://github.com/tamaraw01/ctx-budget"
+readme = "README.md"
+keywords = ["llm", "tokens", "context-window", "cli", "developer-tools"]
+categories = ["command-line-utilities", "development-tools"]
+authors = ["ctx-budget maintainers"]
+exclude = ["/target", ".github/assets"]
 
 [[bin]]
 name = "ctx-budget"
@@ -14,7 +24,7 @@ clap = { version = "4", features = ["derive"] }
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 csv = "1"
-atty = "0.2"
+is-terminal = "0.4"
 
 [dev-dependencies]
 tempfile = "3"
@@ -25,4 +35,4 @@ opt-level = 3
 lto = true
 strip = true
 panic = "abort"
-
+codegen-units = 1

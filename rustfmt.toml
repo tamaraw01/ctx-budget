@@ -1,0 +1,13 @@
+# Rust code formatting configuration for stable channel
+edition = "2021"
+hard_tabs = false
+tab_spaces = 4
+newline_style = "Auto"
+use_try_shorthand = true
+use_field_init_shorthand = true
+use_small_heuristics = "Default"
+force_explicit_abi = true
+reorder_imports = true
+reorder_modules = true
+remove_nested_parens = true
+match_block_trailing_comma = true

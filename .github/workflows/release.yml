@@ -1,18 +1,146 @@
 name: Release
+
 on:
   push:
     tags:
-      - 'v*'
+      - 'v[0-9]+.[0-9]+.[0-9]+'
+
+permissions:
+  contents: write
+
 jobs:
-  release:
+  create-release:
+    name: Create Release
+    runs-on: ubuntu-latest
+    outputs:
+      upload_url: ${{ steps.create_release.outputs.upload_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Get changelog
+        id: changelog
+        run: |
+          VERSION="${{ github.ref_name }}"
+          # Extract version from tag
+          VERSION=${VERSION#v}
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Create Release
+        id: create_release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: Release ${{ github.ref_name }}
+          draft: false
+          prerelease: false
+          generate_release_notes: true
+
+  build-release:
+    name: Build Release
+    needs: create-release
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            target: x86_64-unknown-linux-gnu
+            binary_name: ctx-budget
+            archive_name: ctx-budget-x86_64-unknown-linux-gnu.tar.gz
+
+          - os: ubuntu-latest
+            target: x86_64-unknown-linux-musl
+            binary_name: ctx-budget
+            archive_name: ctx-budget-x86_64-unknown-linux-musl.tar.gz
+
+          - os: ubuntu-latest
+            target: aarch64-unknown-linux-gnu
+            binary_name: ctx-budget
+            archive_name: ctx-budget-aarch64-unknown-linux-gnu.tar.gz
+
+          - os: ubuntu-latest
+            target: aarch64-unknown-linux-musl
+            binary_name: ctx-budget
+            archive_name: ctx-budget-aarch64-unknown-linux-musl.tar.gz
+
+          - os: macos-latest
+            target: x86_64-apple-darwin
+            binary_name: ctx-budget
+            archive_name: ctx-budget-x86_64-apple-darwin.tar.gz
+
+          - os: macos-latest
+            target: aarch64-apple-darwin
+            binary_name: ctx-budget
+            archive_name: ctx-budget-aarch64-apple-darwin.tar.gz
+
+          - os: windows-latest
+            target: x86_64-pc-windows-msvc
+            binary_name: ctx-budget.exe
+            archive_name: ctx-budget-x86_64-pc-windows-msvc.zip
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.target }}
+
+      - uses: taiki-e/install-action@cross
+        if: matrix.target != 'x86_64-pc-windows-msvc' && matrix.target != 'x86_64-apple-darwin' && matrix.target != 'aarch64-apple-darwin'
+
+      - name: Build
+        run: |
+          if [ "${{ matrix.target }}" == "x86_64-pc-windows-msvc" ] || [ "${{ matrix.target }}" == "x86_64-apple-darwin" ] || [ "${{ matrix.target }}" == "aarch64-apple-darwin" ]; then
+            cargo build --release --target ${{ matrix.target }}
+          else
+            cross build --release --target ${{ matrix.target }}
+          fi
+        shell: bash
+
+      - name: Strip binary
+        if: matrix.os != 'windows-latest'
+        run: |
+          if command -v ${{ matrix.target }}-strip &> /dev/null; then
+            ${{ matrix.target }}-strip target/${{ matrix.target }}/release/${{ matrix.binary_name }}
+          elif command -v llvm-strip &> /dev/null; then
+            llvm-strip target/${{ matrix.target }}/release/${{ matrix.binary_name }}
+          else
+            strip target/${{ matrix.target }}/release/${{ matrix.binary_name }}
+          fi
+
+      - name: Create archive (Unix)
+        if: matrix.os != 'windows-latest'
+        run: |
+          mkdir -p ctx-budget-${{ matrix.target }}/bin
+          cp target/${{ matrix.target }}/release/${{ matrix.binary_name }} ctx-budget-${{ matrix.target }}/bin/
+          cp README.md LICENSE CONTRIBUTING.md ctx-budget-${{ matrix.target }}/
+          tar czf ${{ matrix.archive_name }} ctx-budget-${{ matrix.target }}
+
+      - name: Create archive (Windows)
+        if: matrix.os == 'windows-latest'
+        shell: pwsh
+        run: |
+          mkdir -p ctx-budget-${{ matrix.target }}\bin
+          Copy-Item target\${{ matrix.target }}\release\${{ matrix.binary_name }} ctx-budget-${{ matrix.target }}\bin\
+          Copy-Item README.md, LICENSE, CONTRIBUTING.md ctx-budget-${{ matrix.target }}\
+          Compress-Archive -Path ctx-budget-${{ matrix.target }} -DestinationPath ${{ matrix.archive_name }}
+
+      - name: Upload Release Asset
+        uses: softprops/action-gh-release@v2
+        with:
+          files: ${{ matrix.archive_name }}
+          tag_name: ${{ github.ref_name }}
+
+  publish-crate:
+    name: Publish to crates.io
+    needs: build-release
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions-rs/toolchain@v1
-        with:
-          toolchain: stable
-      - run: cargo build --release
-      - run: cp target/release/ctx-budget ctx-budget-linux-x86_64
-      - uses: softprops/action-gh-release@v1
-        with:
-          files: ctx-budget-linux-x86_64
+      - uses: actions/checkout@v4
+
+      - uses: dtolnay/rust-toolchain@stable
+
+      - name: Publish
+        env:
+          CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_TOKEN }}
+        run: cargo publish --allow-dirty
